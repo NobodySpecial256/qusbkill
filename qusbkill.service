@@ -1,0 +1,13 @@
+[Unit]
+Description=Qubes USBKill panic script
+After=qubes-vm@sys-usb.service
+
+[Service]
+Type=exec
+User=root
+ExecStart=/usr/bin/qusbkill
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+RequiredBy=multi-user.target

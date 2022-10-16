@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+from subprocess import run
+from string import printable
+from os import geteuid
+from time import sleep
+from sys import argv
+
+usbvm = "sys-usb"
+lsusb = ["/usr/bin/qvm-run", "-u", "root", "--pass-io", usbvm, "lsusb"]
+delay = 0.1
+panic_command = ["poweroff", "-h", "-f"]
+
+if geteuid() != 0:
+#	print("Elevating to root...")
+	run(["sudo"] + argv)
+	raise SystemExit
+
+try:
+	expected_devices = run(lsusb, capture_output=True).stdout.decode()
+	print("Monitoring USB device changes...")
+	while True:
+		usb_devices = run(lsusb, capture_output=True).stdout.decode()
+		if usb_devices != expected_devices:
+			print("Device change detected")
+			run(panic_command)
+		sleep(delay)
+except KeyboardInterrupt:
+	print("Caught ctrl+c, quitting...")
+except SystemExit:
+	print("Caught exit signal, quitting...")
