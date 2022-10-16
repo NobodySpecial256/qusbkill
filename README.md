@@ -24,3 +24,9 @@ It doesn't require any changes to be made to sys-usb in order to work
 - To stop qusbkill, run `uk stop`
 - To check if qusbkill is running, run `qucbkill status`
 - You can also queue multiple commands. For example, `qusbkill start status` will start qusbkill, then show the status to make sure it's actually running
+
+### How to copy files to dom0
+
+The Qubes official documentation has information about copying files to dom0: https://www.qubes-os.org/doc/how-to-copy-from-dom0/#copying-to-dom0
+
+For the best security, you should download this into a disposable VM, to prevent a compromised qube from tampering with the data locally
