@@ -4,10 +4,10 @@ A working USBKill script for Qubes
 
 Installation is as follows:
 
-- Copy `qusbkill` and `qusbkill.service` into dom0
+- Copy `qusbkill`, `qusbkill.service`, and `uk` into dom0
 - Copy/move `qusbkill` into `/usr/bin` and mark it as executable
 - Copy/move `qusbkill.service` into `/etc/systemd/system`
-- (optional) Copy/move `uk` into `/usr/bin` and mark it executable
+- Copy/move `uk` into `/usr/bin` and mark it executable
   - `uk` is a helper script to disable/re-enable qusbkill without typing a long systemctl command
 - Run `systemctl enable qusbkill` to make qusbkill start at boot
 - After qusbkill is set to start at boot, run `systemctl start qusbkill` to start qusbkill immediately
