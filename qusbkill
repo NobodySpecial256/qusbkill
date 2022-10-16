@@ -9,7 +9,7 @@ from sys import argv
 usbvm = "sys-usb"
 lsusb = ["/usr/bin/qvm-run", "-u", "root", "--pass-io", usbvm, "lsusb"]
 delay = 0.1
-panic_command = ["poweroff", "-h", "-f"]
+panic_command = ["poweroff", "-p", "-f"]
 
 if geteuid() != 0:
 #	print("Elevating to root...")
