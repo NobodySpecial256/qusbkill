@@ -6,5 +6,11 @@ if [[ "$UID" != 0 ]]; then
 fi
 
 for arg in "$@"; do
-	systemctl "$arg" qusbkill
+	if [[ "$arg" == "log" ]]; then
+		less /var/log/qusbkill.log
+	elif [[ "$arg" == "rm-log" ]]; then
+		rm /var/log/qusbkill.log
+	else
+		systemctl "$arg" qusbkill
+	fi
 done
