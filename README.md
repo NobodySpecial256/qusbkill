@@ -23,6 +23,8 @@ It doesn't require any changes to be made to sys-usb in order to work
 - To start qusbkill, run `uk start`
 - To stop qusbkill, run `uk stop`
 - To check if qusbkill is running, run `qucbkill status`
+- To view qusbkill's logs, run `uk log`
+- To delete qusbkill's logs, run `uk rm-log`
 - You can also queue multiple commands. For example, `qusbkill start status` will start qusbkill, then show the status to make sure it's actually running
 
 ### How to copy files to dom0
