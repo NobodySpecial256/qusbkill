@@ -52,10 +52,10 @@ if log_file != None and log_file != "":
 	write(log, "qusbkill: starting @ %s\n" %(datetime.now().isoformat()))
 
 try:
-	expected_devices = run(lsusb, capture_output=True).stdout.decode()
+	expected_devices = run(lsusb, capture_output=True).stdout.decode(encoding="ascii", errors="replace")
 	print("Monitoring USB device changes...")
 	while True:
-		usb_devices = run(lsusb, capture_output=True).stdout.decode()
+		usb_devices = run(lsusb, capture_output=True).stdout.decode(encoding="ascii", errors="replace")
 		if usb_devices != expected_devices:
 			print("Device change detected")
 			if log != None:
