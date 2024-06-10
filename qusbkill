@@ -30,21 +30,31 @@ log_file = "/var/log/qusbkill.log" # Set to None or "" to disable logging
 do_sync = False
 
 if geteuid() != 0:
-	run(["sudo"] + argv)
+	try:
+		run(["sudo"] + argv)
+	except:
+		pass
 	raise SystemExit
 
 # The command to use to query USB devices. Do not change this unless you know what you're doing
 lsusb = ["/usr/bin/qvm-run", "-u", "root", "--pass-io", usbvm, "lsusb"]
 
 def clean(string):
-	return ''.join([c for c in string if c in printable])
+	ret = ''
+	for c in string:
+		if c in printable:
+			ret += c
+		else:
+			ret += '\uFFFD'
+	return ret
 def write(f, w):
 	f.write(w)
 	stdout.write(w)
 	f.flush()
 	fsync(f)
-def diff(a, b):
-	return ''.join([c[2] for c in ndiff(a, b) if c[0] != " "])
+def cleandiff(a, b):
+	# Remove `difflib.ndiff` from the TCB
+	return clean(''.join([c[2] for c in ndiff(clean(a), clean(b)) if c[0] != " "]))
 
 log = None
 if log_file != None and log_file != "":
@@ -58,8 +68,8 @@ try:
 		usb_devices = run(lsusb, capture_output=True).stdout.decode(encoding="ascii", errors="replace")
 		if usb_devices != expected_devices:
 			print("Device change detected")
-			if log != None:
-				write(log, "%s\nqusbkill: triggered panic @ %s\nexpected:\n%s\ndetected:\n%s\nchanged device:\n%s\n\n" %("-" * 64, datetime.now().isoformat(), clean(expected_devices), clean(usb_devices), clean(diff(expected_devices, usb_devices))))
+			if log != None:				
+				write(log, "%s\nqusbkill: triggered panic @ %s\nexpected:\n%s\ndetected:\n%s\nchanged device:\n%s\n\n" %("-" * 64, datetime.now().isoformat(), clean(expected_devices), clean(usb_devices), cleandiff(expected_devices, usb_devices)))
 			if do_sync:
 				sync()
 				write(log, "-- Synced --\n")
@@ -73,3 +83,4 @@ except SystemExit:
 if log != None:
 	write(log, "%s\nqusbkill: gracefully shutting down @ %s\n" %("-" * 64, datetime.now().isoformat()))
 	log.close()
+	print("qusbkill: stopped")
